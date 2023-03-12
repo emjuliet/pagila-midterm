@@ -12,3 +12,36 @@
  * NOTE:
  * Your results should not contain any duplicate titles.
  */
+
+SELECT DISTINCT title FROM film
+WHERE title NOT LIKE '%F%' 
+
+EXCEPT
+
+SELECT title FROM film
+    JOIN film_actor USING (actor_id)
+    JOIN actor USING (actor_id)
+    WHERE actor.first_name LIKE '%F%' OR actor.last_name LIKE '%F%'
+
+EXCEPT
+
+    SELECT title FROM film
+    JOIN rental USING (inventory_id)
+    JOIN customer USING (customer_id)
+    WHERE customer.first_name LIKE '%F%' OR customer.last_name LIKE '%F%' 
+
+EXCEPT
+
+    SELECT title FROM film
+    JOIN rental USING (inventory_id)
+    JOIN customer USING (customer_id)
+    JOIN address USING (address_id)
+    JOIN city USING (city_id)
+    JOIN country USING (country_id)
+    WHERE address ILIKE '%F%'
+    OR address.address LIKE '%F%'
+    OR address.address2 LIKE '%F%'
+    OR city.city LIKE '%F%'
+    OR country.country LIKE '%F'
+   
+    ORDER BY title;
